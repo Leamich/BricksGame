@@ -5,6 +5,8 @@ public class Platform : MonoBehaviour
     [SerializeField] float _velocity;
     [SerializeField] float _duration;
     [SerializeField] Root _root;
+    [SerializeField] float _xMin;
+    [SerializeField] float _xMax;
 
     private SpriteRenderer _renderer;
 
@@ -42,12 +44,14 @@ public class Platform : MonoBehaviour
         {
             var position = transform.position;
             position.x -= _velocity * Time.deltaTime;
+            position.x = Mathf.Max(_xMin, Mathf.Min(position.x, _xMax));
             transform.position = position;
         }
         if (Input.GetKey(KeyCode.D))
         {
             var position = transform.position;
             position.x += _velocity * Time.deltaTime;
+            position.x = Mathf.Max(_xMin, Mathf.Min(position.x, _xMax));
             transform.position = position;
         }
 
