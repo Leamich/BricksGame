@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Ball : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class Ball : MonoBehaviour
     [SerializeField] Vector2 _startVelocity;
     [SerializeField] float _platformVelocityCoefficient;
     [SerializeField] float _floorVelocityCoefficient;
+    [SerializeField] float _endGameVelocity;
 
     private Vector3 _velocity = new(0f, 0f, 0f);
 
@@ -21,14 +23,13 @@ public class Ball : MonoBehaviour
 
     public void Update()
     {
-        if (_velocity.magnitude == 0) _root.EndGame();
+        if (!_root.IsPlaying) return;
+        if (_velocity.magnitude <= _endGameVelocity) _root.EndGame();
         transform.position += _velocity * Time.deltaTime;
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        // Debug.Log(collision.gameObject);
-
         if (collision.gameObject.TryGetComponent(out Brick brick))
         {
             brick.OnBallCollision();
@@ -46,9 +47,9 @@ public class Ball : MonoBehaviour
         }
         else if (collision.gameObject.TryGetComponent(out Platform platform))
         {
-            platform.OnBallCollision();
             _velocity *= _platformVelocityCoefficient * Mathf.Max(platform.TiredCoefficient, 0.1f);
             _velocity.y = -_velocity.y;
+            platform.OnBallCollision();
         }
         else if (collision.gameObject.TryGetComponent(out Border border))
         {

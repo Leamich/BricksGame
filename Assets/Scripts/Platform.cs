@@ -4,6 +4,7 @@ public class Platform : MonoBehaviour
 {
     [SerializeField] float _velocity;
     [SerializeField] float _duration;
+    [SerializeField] Root _root;
 
     private SpriteRenderer _renderer;
 
@@ -13,13 +14,18 @@ public class Platform : MonoBehaviour
     {
         get
         {
-            return 1f - Mathf.Max(0, (_duration - Time.time + _lastTouch) / _duration);
+            return 1f - Mathf.Max(0, _duration - (Time.time - _lastTouch)) / _duration;
         }
     }
 
     public void OnEnable()
     {
         _renderer = GetComponent<SpriteRenderer>();
+        _root.OnGameStart += OnGameStart;
+    }
+
+    public void OnGameStart()
+    {
         _lastTouch = Time.time;
     }
 
@@ -30,6 +36,8 @@ public class Platform : MonoBehaviour
 
     public void Update()
     {
+        if (!_root.IsPlaying) { return; }
+
         if (Input.GetKey(KeyCode.A))
         {
             var position = transform.position;
@@ -47,7 +55,7 @@ public class Platform : MonoBehaviour
         color.r = 1f;
         color.b = TiredCoefficient;
         color.g = TiredCoefficient;
-        // Debug.Log(color);
+
         _renderer.color = color;
     }
 }
