@@ -24,7 +24,7 @@ public class Ball : MonoBehaviour
     public void Update()
     {
         if (!_root.IsPlaying) return;
-        if (_velocity.magnitude <= _endGameVelocity) _root.EndGame();
+        if (_velocity.magnitude <= _endGameVelocity) _root.OnBallStop();
         transform.position += _velocity * Time.deltaTime;
     }
 
@@ -60,5 +60,13 @@ public class Ball : MonoBehaviour
             _velocity *= _floorVelocityCoefficient;
             _velocity.y = -_velocity.y;
         }
+    }
+
+    public void MoveToStartPosition(float x)
+    {
+        var position = transform.position;
+        position.y = -3.11f;
+        position.x = x;
+        transform.position = position;
     }
 }
