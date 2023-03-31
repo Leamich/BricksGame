@@ -24,7 +24,7 @@ public class Ball : MonoBehaviour
     public void Update()
     {
         if (!_root.IsPlaying) return;
-        if (_velocity.magnitude <= _endGameVelocity) _root.OnBallStop();
+        // if (_velocity.magnitude <= _endGameVelocity) _root.OnBallStop();
         transform.position += _velocity * Time.deltaTime;
     }
 
@@ -57,6 +57,7 @@ public class Ball : MonoBehaviour
         }
         else if (collision.gameObject.TryGetComponent(out Floor floor))
         {
+            _root.OnBallStop();
             _velocity *= _floorVelocityCoefficient;
             _velocity.y = -_velocity.y;
         }
